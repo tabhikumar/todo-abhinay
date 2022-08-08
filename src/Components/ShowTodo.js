@@ -6,7 +6,7 @@ function ShowTodo(props) {
             <div className="row my-2">
 
                 <div className="col-4">
-                    <h6>{props.task}</h6>
+                    <h6>{props.todo}</h6>
                 </div>
                 <div className="col-4">
                 <button onClick={() => props.handleEdit(props.id)}>Edit</button>

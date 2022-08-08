@@ -2,44 +2,42 @@ import React, { useState } from 'react'
 import ShowTodo from './ShowTodo'
 import './Todo.css'
 function Todo() {
-
-    const [task, setTask] = useState("add some task");
-    const [data, setData] = useState([]);
-    
+    const [todo, setTodo] = useState("");
+    const [todos, setTodos] = useState([]);
     const [editId, setEditId] = useState(0);
 
-  
-
     const submitHandler = (e) => {
+
         e.preventDefault();
+        
+        if (todo) {
+            setTodos([{ id: `${todo}-${Date.now()}`, todo }, ...todos]);
+            setTodo("");
+          }
 
         if (editId) {
-            const editTask = data.find((i) => i.id === editId);
-            const updatedData = data.map((t) =>
-              t.id === editTask.id
-                ? (t = { id: t.id, task })
-                : { id: t.id, task: t.task }
+            const editTodo = todos.find((i) => i.id === editId);
+            const updatedTodos = todos.map((t) =>
+              t.id === editTodo.id
+                ? (t = { id: t.id, todo })
+                : { id: t.id, todo: t.todo }
             );
-            setData(updatedData);
+            setTodos(updatedTodos);
             setEditId(0);
-            setTask("");
+            setTodo("");
             return;
           }
 
-        if (task !== "") {
-            setData([{ id: `${task}-${Date.now()}`, task }, ...data]);
-            setTask("");
-          }
         };
 
     const deleteItem =(id)=>{
-        const delTask = data.filter((to) => to.id !== id);
-        setData([...delTask]);
+        const delTodo = todos.filter((t) => t.id !== id);
+        setTodos([...delTodo]);
     }
 
     const handleEdit = (id) => {
-        const editTask = data.find((i) => i.id === id);
-        setTask(editTask.task);
+        const editTodo = todos.find((i) => i.id === id);
+        setTodo(editTodo.todo);
         setEditId(id);
       };
     return (
@@ -54,18 +52,17 @@ function Todo() {
                     <form onSubmit={submitHandler} >
                         <div className="row justify-content-between text-white p-2">
                             <div className="form-group flex-fill mb-2 col-9">
-                                <input id="todo-input" type="text" className="form-control"  value={task} onChange={(e) => setTask(e.target.value)} required />
+                                <input id="todo-input" type="text" className="form-control" placeholder='Add Your Task Here' value={todo} onChange={(e) => setTodo(e.target.value)} required />
                             </div>
                             <button type="submit" className="btn btn-primary mb-2 ml-2 col-3">{editId ? "Edit" : "ADD"}</button>
                         </div>
                     </form>
 
-                    {data.map((t) => {
+                    {todos.map((t) => {
                         return <ShowTodo
                             key={t.id}
                             id={t.id}
-                            task={t.task}
-                            
+                            todo={t.todo}
                             onSelcet={deleteItem}
                             handleEdit={handleEdit}
                         />
